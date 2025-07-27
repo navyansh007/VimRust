@@ -1,0 +1,41 @@
+[package]
+name = "vimrust"
+version = "0.1.0"
+edition = "2021"
+description = "A modern vim-like text editor written in Rust with advanced features"
+authors = ["VimRust Contributors"]
+license = "MIT"
+repository = "https://github.com/navyansh007/VimRust"
+homepage = "https://github.com/navyansh007/VimRust"
+documentation = "https://docs.rs/vimrust"
+readme = "README.md"
+keywords = ["editor", "vim", "terminal", "text-editor", "rust"]
+categories = ["command-line-utilities", "text-editors"]
+include = [
+    "src/**/*",
+    "Cargo.toml",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "user-manual.md",
+    "examples/**/*"
+]
+
+[[bin]]
+name = "vimrust"
+path = "src/main.rs"
+
+[dependencies]
+crossterm = "0.27"
+ratatui = "0.24"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+syntect = "5.1"
+tokio = { version = "1.0", features = ["full"] }
+clap = { version = "4.4", features = ["derive"] }
+anyhow = "1.0"
+regex = "1.10"
+ropey = "1.6"
+tree-sitter = "0.20"
+lsp-types = "0.94"
+tower-lsp = "0.20"

@@ -1,0 +1,77 @@
+# VimRust Themes Configuration (Future Feature)
+# This file shows how themes might be configured in future versions
+
+[theme.default]
+name = "Default"
+background = "black"
+foreground = "white"
+cursor = "white"
+selection = "blue"
+
+[theme.default.syntax]
+comment = "gray"
+string = "green"
+keyword = "blue"
+number = "cyan"
+function = "yellow"
+type = "magenta"
+
+[theme.dark]
+name = "Dark Theme"
+background = "#1e1e1e"
+foreground = "#d4d4d4"
+cursor = "#ffffff"
+selection = "#264f78"
+
+[theme.dark.syntax]
+comment = "#6a9955"
+string = "#ce9178"
+keyword = "#569cd6"
+number = "#b5cea8"
+function = "#dcdcaa"
+type = "#4ec9b0"
+
+[theme.light]
+name = "Light Theme"
+background = "#ffffff"
+foreground = "#000000"
+cursor = "#000000"
+selection = "#add6ff"
+
+[theme.light.syntax]
+comment = "#008000"
+string = "#a31515"
+keyword = "#0000ff"
+number = "#098658"
+function = "#795e26"
+type = "#267f99"
+
+[theme.solarized_dark]
+name = "Solarized Dark"
+background = "#002b36"
+foreground = "#839496"
+cursor = "#93a1a1"
+selection = "#073642"
+
+[theme.solarized_dark.syntax]
+comment = "#586e75"
+string = "#2aa198"
+keyword = "#268bd2"
+number = "#d33682"
+function = "#b58900"
+type = "#cb4b16"
+
+[theme.monokai]
+name = "Monokai"
+background = "#272822"
+foreground = "#f8f8f2"
+cursor = "#f8f8f0"
+selection = "#49483e"
+
+[theme.monokai.syntax]
+comment = "#75715e"
+string = "#e6db74"
+keyword = "#f92672"
+number = "#ae81ff"
+function = "#a6e22e"
+type = "#66d9ef"

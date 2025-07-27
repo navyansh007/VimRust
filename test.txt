@@ -1,0 +1,44 @@
+Hello, World!
+This is a test file for VimRust editor.
+You can edit this text using these commands:
+
+NAVIGATION:
+- Arrow keys for movement (works in both Normal and Insert mode!)
+- w, b, e for word movement
+- 0, $, ^ for line movement
+- gg, G for file movement
+
+INSERT MODES:
+- i for insert before cursor
+- a for insert after cursor
+- A for insert at end of line
+- o for open line below
+- O for open line above
+
+EDITING:
+- x for delete character
+- dd for delete line
+- dw for delete word
+- yy for yank (copy) line
+- yw for yank word
+- p for paste
+- u for undo
+- Ctrl+r for redo
+
+VISUAL MODE:
+- v to enter visual mode
+- Select text with arrow keys
+- y to copy selection
+- x to delete selection
+
+COMMANDS:
+- :w to save
+- :q to quit
+- :q! to force quit
+- :wq to save and quit
+- /text to search forward
+- ?text to search backward
+- n for next search result
+- :s/old/new/g to replace text
+
+Try these features out!
