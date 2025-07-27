@@ -1,8 +1,8 @@
 use crate::cursor::Cursor;
 use anyhow::Result;
+use ropey::Rope;
 use std::fs;
 use std::path::Path;
-use ropey::Rope;
 #[derive(Clone)]
 pub struct BufferState {
     pub content: Rope,
@@ -216,7 +216,9 @@ impl Buffer {
             self.content.len_chars()
         };
         if line_end_pos < actual_line_end {
-            self.content.slice(line_end_pos..actual_line_end).to_string()
+            self.content
+                .slice(line_end_pos..actual_line_end)
+                .to_string()
         } else {
             String::new()
         }

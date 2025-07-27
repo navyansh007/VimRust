@@ -1,7 +1,7 @@
 use crate::buffer::Buffer;
+use crate::commands::CommandHandler;
 use crate::modes::EditorMode;
 use crate::ui::UI;
-use crate::commands::CommandHandler;
 use anyhow::Result;
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyModifiers};
 use std::time::Duration;
@@ -10,10 +10,12 @@ pub struct Editor {
     current_buffer: usize,
     mode: EditorMode,
     ui: UI,
+    #[allow(dead_code)]
     command_handler: CommandHandler,
     running: bool,
     clipboard: Vec<String>,
     search_pattern: Option<String>,
+    #[allow(dead_code)]
     last_command: Option<String>,
     command_line: String,
     message: Option<String>,
@@ -57,7 +59,8 @@ impl Editor {
     }
     fn render(&mut self) -> Result<()> {
         let buffer = &self.buffers[self.current_buffer];
-        self.ui.render(buffer, &self.mode, &self.command_line, &self.message)?;
+        self.ui
+            .render(buffer, &self.mode, &self.command_line, &self.message)?;
         Ok(())
     }
     fn handle_input(&mut self) -> Result<()> {
@@ -88,34 +91,34 @@ impl Editor {
             KeyCode::Char('I') => {
                 buffer.cursor.move_line_start();
                 self.mode = EditorMode::Insert;
-            },
+            }
             KeyCode::Char('o') => {
                 buffer.cursor.move_line_end(&buffer.content);
                 buffer.insert_newline();
                 self.mode = EditorMode::Insert;
-            },
+            }
             KeyCode::Char('O') => {
                 buffer.cursor.move_line_start();
                 buffer.insert_newline();
                 buffer.cursor.move_up();
                 self.mode = EditorMode::Insert;
-            },
+            }
             KeyCode::Char('v') => {
                 self.mode = EditorMode::Visual;
                 self.visual_start = Some((buffer.cursor.row, buffer.cursor.col));
-            },
+            }
             KeyCode::Char(':') => {
                 self.mode = EditorMode::Command;
                 self.command_line = ":".to_string();
-            },
+            }
             KeyCode::Char('/') => {
                 self.mode = EditorMode::Command;
                 self.command_line = "/".to_string();
-            },
+            }
             KeyCode::Char('?') => {
                 self.mode = EditorMode::Command;
                 self.command_line = "?".to_string();
-            },
+            }
             KeyCode::Up => buffer.cursor.move_up(),
             KeyCode::Down => buffer.cursor.move_down(&buffer.content),
             KeyCode::Left => buffer.cursor.move_left(),
@@ -123,69 +126,71 @@ impl Editor {
             KeyCode::Char('a') => {
                 buffer.cursor.move_right(&buffer.content);
                 self.mode = EditorMode::Insert;
-            },
+            }
             KeyCode::Char('A') => {
                 buffer.cursor.move_line_end(&buffer.content);
                 self.mode = EditorMode::Insert;
-            },
+            }
             KeyCode::Char('w') => buffer.cursor.move_word_forward(&buffer.content),
             KeyCode::Char('b') => buffer.cursor.move_word_backward(&buffer.content),
             KeyCode::Char('e') => buffer.cursor.move_word_end(&buffer.content),
             KeyCode::Char('0') => buffer.cursor.move_line_start(),
             KeyCode::Char('$') => buffer.cursor.move_line_end(&buffer.content),
-            KeyCode::Char('^') => buffer.cursor.move_line_first_non_whitespace(&buffer.content),
+            KeyCode::Char('^') => buffer
+                .cursor
+                .move_line_first_non_whitespace(&buffer.content),
             KeyCode::Char('G') => buffer.cursor.move_to_end(&buffer.content),
             KeyCode::Char('g') => {
                 buffer.cursor.move_to_start();
-            },
+            }
             KeyCode::Char('x') => {
                 buffer.delete_char();
-            },
+            }
             KeyCode::Char('X') => {
                 buffer.backspace();
-            },
+            }
             KeyCode::Delete => {
                 buffer.delete_char();
-            },
+            }
             KeyCode::Char('d') => {
                 self.pending_command = Some('d');
-            },
+            }
             KeyCode::Char('D') => {
                 buffer.delete_to_line_end();
-            },
+            }
             KeyCode::Char('y') => {
                 self.pending_command = Some('y');
-            },
+            }
             KeyCode::Char('Y') => {
                 let text = buffer.get_text_to_line_end();
                 self.clipboard = vec![text];
-            },
+            }
             KeyCode::Char('p') => {
                 if !self.clipboard.is_empty() {
                     buffer.paste_after(&self.clipboard[0]);
                 }
-            },
+            }
             KeyCode::Char('P') => {
                 if !self.clipboard.is_empty() {
                     buffer.paste_before(&self.clipboard[0]);
                 }
-            },
+            }
             KeyCode::Char('u') => {
                 buffer.undo();
-            },
+            }
             KeyCode::Char('r') if key_event.modifiers.contains(KeyModifiers::CONTROL) => {
                 buffer.redo();
-            },
+            }
             KeyCode::Char('n') => {
                 if let Some(pattern) = &self.search_pattern {
                     buffer.find_next(pattern);
                 }
-            },
+            }
             KeyCode::Char('N') => {
                 if let Some(pattern) = &self.search_pattern {
                     buffer.find_previous(pattern);
                 }
-            },
+            }
             _ => {}
         }
         Ok(())
@@ -209,12 +214,12 @@ impl Editor {
                 for _ in 0..10 {
                     buffer.cursor.move_up();
                 }
-            },
+            }
             KeyCode::PageDown => {
                 for _ in 0..10 {
                     buffer.cursor.move_down(&buffer.content);
                 }
-            },
+            }
             _ => {}
         }
         Ok(())
@@ -225,7 +230,7 @@ impl Editor {
             KeyCode::Esc => {
                 self.mode = EditorMode::Normal;
                 self.visual_start = None;
-            },
+            }
             KeyCode::Up => buffer.cursor.move_up(),
             KeyCode::Down => buffer.cursor.move_down(&buffer.content),
             KeyCode::Left => buffer.cursor.move_left(),
@@ -241,7 +246,7 @@ impl Editor {
                 }
                 self.mode = EditorMode::Normal;
                 self.visual_start = None;
-            },
+            }
             KeyCode::Char('x') | KeyCode::Delete => {
                 if let Some(text) = self.get_visual_selection() {
                     self.clipboard = vec![text];
@@ -249,7 +254,7 @@ impl Editor {
                 }
                 self.mode = EditorMode::Normal;
                 self.visual_start = None;
-            },
+            }
             _ => {}
         }
         Ok(())
@@ -259,12 +264,12 @@ impl Editor {
             let buffer = &self.buffers[self.current_buffer];
             let end_row = buffer.cursor.row;
             let end_col = buffer.cursor.col;
-            let (start_row, start_col, end_row, end_col) = if start_row < end_row ||
-                (start_row == end_row && start_col <= end_col) {
-                (start_row, start_col, end_row, end_col)
-            } else {
-                (end_row, end_col, start_row, start_col)
-            };
+            let (start_row, start_col, end_row, end_col) =
+                if start_row < end_row || (start_row == end_row && start_col <= end_col) {
+                    (start_row, start_col, end_row, end_col)
+                } else {
+                    (end_row, end_col, start_row, start_col)
+                };
             let content = &buffer.content;
             let start_char = content.line_to_char(start_row) + start_col;
             let end_char = content.line_to_char(end_row) + end_col + 1;
@@ -282,12 +287,12 @@ impl Editor {
             let buffer = &mut self.buffers[self.current_buffer];
             let end_row = buffer.cursor.row;
             let end_col = buffer.cursor.col;
-            let (start_row, start_col, end_row, end_col) = if start_row < end_row ||
-                (start_row == end_row && start_col <= end_col) {
-                (start_row, start_col, end_row, end_col)
-            } else {
-                (end_row, end_col, start_row, start_col)
-            };
+            let (start_row, start_col, end_row, end_col) =
+                if start_row < end_row || (start_row == end_row && start_col <= end_col) {
+                    (start_row, start_col, end_row, end_col)
+                } else {
+                    (end_row, end_col, start_row, start_col)
+                };
             buffer.save_state();
             let start_char = buffer.content.line_to_char(start_row) + start_col;
             let end_char = buffer.content.line_to_char(end_row) + end_col + 1;
@@ -304,12 +309,12 @@ impl Editor {
             KeyCode::Esc => {
                 self.mode = EditorMode::Normal;
                 self.command_line.clear();
-            },
+            }
             KeyCode::Enter => {
                 self.execute_command()?;
                 self.mode = EditorMode::Normal;
                 self.command_line.clear();
-            },
+            }
             KeyCode::Backspace => {
                 if self.command_line.len() > 1 {
                     self.command_line.pop();
@@ -317,24 +322,21 @@ impl Editor {
                     self.mode = EditorMode::Normal;
                     self.command_line.clear();
                 }
-            },
+            }
             KeyCode::Char(c) => {
                 self.command_line.push(c);
-            },
+            }
             _ => {}
         }
         Ok(())
     }
     fn execute_command(&mut self) -> Result<()> {
         let cmd = self.command_line.clone();
-        if cmd.starts_with(':') {
-            let command = &cmd[1..];
+        if let Some(command) = cmd.strip_prefix(':') {
             self.execute_colon_command(command)?;
-        } else if cmd.starts_with('/') {
-            let pattern = &cmd[1..];
+        } else if let Some(pattern) = cmd.strip_prefix('/') {
             self.search_forward(pattern);
-        } else if cmd.starts_with('?') {
-            let pattern = &cmd[1..];
+        } else if let Some(pattern) = cmd.strip_prefix('?') {
             self.search_backward(pattern);
         }
         Ok(())
@@ -345,43 +347,44 @@ impl Editor {
             "w" | "write" => {
                 buffer.save()?;
                 self.message = Some("File saved".to_string());
-            },
+            }
             "q" | "quit" => {
                 if buffer.modified {
-                    self.message = Some("No write since last change (use :q! to force quit)".to_string());
+                    self.message =
+                        Some("No write since last change (use :q! to force quit)".to_string());
                 } else {
                     self.running = false;
                 }
-            },
+            }
             "q!" => {
                 self.running = false;
-            },
+            }
             "wq" | "x" => {
                 buffer.save()?;
                 self.running = false;
-            },
+            }
             cmd if cmd.starts_with("w ") => {
                 let filename = &cmd[2..];
                 buffer.save_as(filename)?;
                 self.message = Some(format!("File saved as {}", filename));
-            },
+            }
             cmd if cmd.starts_with("e ") => {
                 let filename = &cmd[2..];
                 let new_buffer = Buffer::from_file(filename)?;
                 self.buffers.push(new_buffer);
                 self.current_buffer = self.buffers.len() - 1;
                 self.message = Some(format!("Opened {}", filename));
-            },
+            }
             "bn" => {
                 if self.current_buffer + 1 < self.buffers.len() {
                     self.current_buffer += 1;
                 }
-            },
+            }
             "bp" => {
                 if self.current_buffer > 0 {
                     self.current_buffer -= 1;
                 }
-            },
+            }
             "bd" => {
                 if self.buffers.len() > 1 {
                     self.buffers.remove(self.current_buffer);
@@ -389,26 +392,26 @@ impl Editor {
                         self.current_buffer = self.buffers.len() - 1;
                     }
                 }
-            },
+            }
             cmd if cmd.starts_with("s/") => {
                 self.execute_substitute(cmd)?;
-            },
+            }
             "set number" | "set nu" => {
                 self.buffers[self.current_buffer].line_numbers = true;
                 self.message = Some("Line numbers enabled".to_string());
-            },
+            }
             "set nonumber" | "set nonu" => {
                 self.buffers[self.current_buffer].line_numbers = false;
                 self.message = Some("Line numbers disabled".to_string());
-            },
+            }
             "set syntax" => {
                 self.buffers[self.current_buffer].syntax_highlighting = true;
                 self.message = Some("Syntax highlighting enabled".to_string());
-            },
+            }
             "set nosyntax" => {
                 self.buffers[self.current_buffer].syntax_highlighting = false;
                 self.message = Some("Syntax highlighting disabled".to_string());
-            },
+            }
             _ => {
                 self.message = Some(format!("Unknown command: {}", command));
             }
@@ -451,36 +454,37 @@ impl Editor {
         match (pending, key_event.code) {
             ('d', KeyCode::Char('d')) => {
                 buffer.delete_line();
-            },
+            }
             ('d', KeyCode::Char('w')) => {
                 buffer.delete_word();
-            },
+            }
             ('d', KeyCode::Char('$')) => {
                 buffer.delete_to_line_end();
-            },
+            }
             ('d', KeyCode::Char('0')) => {
                 buffer.delete_to_line_start();
-            },
+            }
             ('y', KeyCode::Char('y')) => {
                 let line = buffer.get_current_line();
                 self.clipboard = vec![line];
-            },
+            }
             ('y', KeyCode::Char('w')) => {
                 let word = buffer.yank_word();
                 self.clipboard = vec![word];
-            },
+            }
             ('y', KeyCode::Char('$')) => {
                 let text = buffer.get_text_to_line_end();
                 self.clipboard = vec![text];
-            },
-            _ => {
             }
+            _ => {}
         }
         Ok(())
     }
+    #[allow(dead_code)]
     pub fn get_current_buffer(&self) -> &Buffer {
         &self.buffers[self.current_buffer]
     }
+    #[allow(dead_code)]
     pub fn get_current_buffer_mut(&mut self) -> &mut Buffer {
         &mut self.buffers[self.current_buffer]
     }

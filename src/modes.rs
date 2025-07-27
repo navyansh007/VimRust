@@ -14,6 +14,7 @@ impl EditorMode {
             EditorMode::Command => "COMMAND",
         }
     }
+    #[allow(dead_code)]
     pub fn get_cursor_style(&self) -> CursorStyle {
         match self {
             EditorMode::Normal => CursorStyle::Block,
@@ -23,12 +24,14 @@ impl EditorMode {
         }
     }
 }
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub enum CursorStyle {
     Block,
     Line,
     Underline,
 }
+#[allow(dead_code)]
 pub trait Mode {
     fn name(&self) -> &'static str;
     fn cursor_style(&self) -> CursorStyle;

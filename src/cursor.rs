@@ -114,6 +114,7 @@ impl Cursor {
         self.col = line_len;
         self.desired_col = self.col;
     }
+    #[allow(dead_code)]
     pub fn move_to_line(&mut self, content: &Rope, line: usize) {
         self.row = line.min(content.len_lines().saturating_sub(1));
         let line_len = self.get_line_length(content, self.row);
@@ -132,6 +133,7 @@ impl Cursor {
             0
         }
     }
+    #[allow(dead_code)]
     pub fn clamp_to_buffer(&mut self, content: &Rope) {
         self.row = self.row.min(content.len_lines().saturating_sub(1));
         let line_len = self.get_line_length(content, self.row);

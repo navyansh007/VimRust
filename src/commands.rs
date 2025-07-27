@@ -1,9 +1,12 @@
 use crate::buffer::Buffer;
 use anyhow::Result;
 use std::collections::HashMap;
+
+#[allow(dead_code)]
 pub struct CommandHandler {
     commands: HashMap<String, Box<dyn Command>>,
 }
+#[allow(dead_code)]
 impl CommandHandler {
     pub fn new() -> Self {
         let mut commands: HashMap<String, Box<dyn Command>> = HashMap::new();
@@ -24,7 +27,7 @@ impl CommandHandler {
         Self { commands }
     }
     pub fn execute(&self, command: &str, buffer: &mut Buffer) -> Result<CommandResult> {
-        let parts: Vec<&str> = command.trim().split_whitespace().collect();
+        let parts: Vec<&str> = command.split_whitespace().collect();
         if parts.is_empty() {
             return Ok(CommandResult::None);
         }
@@ -44,6 +47,7 @@ impl CommandHandler {
             .collect()
     }
 }
+#[allow(dead_code)]
 #[derive(Debug)]
 pub enum CommandResult {
     None,
@@ -51,6 +55,7 @@ pub enum CommandResult {
     Message(String),
     Error(String),
 }
+#[allow(dead_code)]
 pub trait Command {
     fn execute(&self, args: &[&str], buffer: &mut Buffer) -> Result<CommandResult>;
 }
@@ -70,7 +75,9 @@ struct QuitCommand;
 impl Command for QuitCommand {
     fn execute(&self, _args: &[&str], buffer: &mut Buffer) -> Result<CommandResult> {
         if buffer.modified {
-            Err(anyhow::anyhow!("No write since last change (use :q! to force quit)"))
+            Err(anyhow::anyhow!(
+                "No write since last change (use :q! to force quit)"
+            ))
         } else {
             Ok(CommandResult::Quit)
         }
@@ -103,7 +110,9 @@ impl Command for SubstituteCommand {
         if args.is_empty() {
             Err(anyhow::anyhow!("Substitute requires pattern"))
         } else {
-            Ok(CommandResult::Message("Substitute not implemented yet".to_string()))
+            Ok(CommandResult::Message(
+                "Substitute not implemented yet".to_string(),
+            ))
         }
     }
 }
@@ -129,25 +138,31 @@ struct SetCommand;
 impl Command for SetCommand {
     fn execute(&self, args: &[&str], buffer: &mut Buffer) -> Result<CommandResult> {
         if args.is_empty() {
-            return Ok(CommandResult::Message("Available settings: number, syntax".to_string()));
+            return Ok(CommandResult::Message(
+                "Available settings: number, syntax".to_string(),
+            ));
         }
         match args[0] {
             "number" | "nu" => {
                 buffer.line_numbers = true;
                 Ok(CommandResult::Message("Line numbers enabled".to_string()))
-            },
+            }
             "nonumber" | "nonu" => {
                 buffer.line_numbers = false;
                 Ok(CommandResult::Message("Line numbers disabled".to_string()))
-            },
+            }
             "syntax" => {
                 buffer.syntax_highlighting = true;
-                Ok(CommandResult::Message("Syntax highlighting enabled".to_string()))
-            },
+                Ok(CommandResult::Message(
+                    "Syntax highlighting enabled".to_string(),
+                ))
+            }
             "nosyntax" => {
                 buffer.syntax_highlighting = false;
-                Ok(CommandResult::Message("Syntax highlighting disabled".to_string()))
-            },
+                Ok(CommandResult::Message(
+                    "Syntax highlighting disabled".to_string(),
+                ))
+            }
             _ => Err(anyhow::anyhow!("Unknown setting: {}", args[0])),
         }
     }

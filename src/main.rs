@@ -1,12 +1,12 @@
-mod editor;
 mod buffer;
-mod cursor;
-mod modes;
-mod ui;
-mod syntax;
 mod commands;
-use clap::Parser;
+mod cursor;
+mod editor;
+mod modes;
+mod syntax;
+mod ui;
 use anyhow::Result;
+use clap::Parser;
 #[derive(Parser)]
 #[command(name = "vimrust")]
 #[command(about = "A Vim-like text editor with advanced features")]
