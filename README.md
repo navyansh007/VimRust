@@ -43,7 +43,7 @@ A modern, vim-like text editor written in Rust with advanced features that go be
 
 ### Building from Source
 ```bash
-git clone https://github.com/navyanshkesarwani/VimRust.git
+git clone https://github.com/navyansh007/VimRust.git
 cd VimRust
 cargo build --release
 ```
@@ -145,7 +145,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ### Development Setup
 ```bash
-git clone https://github.com/navyanshkesarwani/VimRust.git
+git clone https://github.com/navyansh007/VimRust.git
 cd VimRust
 cargo build
 cargo test
@@ -208,4 +208,4 @@ VimRust is in active development. Current version: **0.1.0**
 
 **Made with ❤️ and Rust**
 
-For more information, visit our [documentation](user-manual.md) or [open an issue](https://github.com/navyanshkesarwani/VimRust/issues).
+For more information, visit our [documentation](user-manual.md) or [open an issue](https://github.com/navyansh007/VimRust/issues).
